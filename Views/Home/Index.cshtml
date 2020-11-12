@@ -1,0 +1,37 @@
+﻿@model IEnumerable<MrDriverCore.Models.User>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1>Locations for @ViewBag.User.Username</h1>
+    <hr />
+        <a asp-controller="Home" asp-action="CreateLocation">
+            <input type="button" class="btn btn-primary" value="Create New Location" />
+        </a>
+    <hr />
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Street</th>
+                <th>City</th>
+                <th>LatLng</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in @ViewBag.User.Locations)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Street</td>
+                    <td>@item.City</td>
+                    <td>@item.LatLng</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <p>@ViewBag.Message</p>
+</div>
