@@ -31,6 +31,15 @@ namespace MrDriverCore.Controllers
             _protector = provider.CreateProtector(_config["CryptoKey"]);
         }
 
+
+        public IActionResult Languages(string term)
+        {
+            var result = new[] { @"ActionScript", "AppleScript", "Asp", "BASIC", "C", "C++",
+    "Clojure", "COBOL", "ColdFusion", "Erlang","Fortran", "Groovy","Haskell",
+    "Java", "JavaScript", "Lisp", "Perl", "PHP", "Python","Ruby", "Scala", "Scheme" };
+            return Json(result.Where(x => x.StartsWith(term, StringComparison.CurrentCultureIgnoreCase)).ToArray());
+        }
+
         private void showViewBagMessage()
         {
             string FlashMessage = HttpContext.Session.GetString("FlashMessage");
@@ -50,7 +59,7 @@ namespace MrDriverCore.Controllers
                 .Include(u => u.Locations)
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
-            foreach (Locations location in ViewBag.User.Locations)
+            foreach (Location location in ViewBag.User.Locations)
             {
                 try
                 {
@@ -74,12 +83,12 @@ namespace MrDriverCore.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateLocation(Locations locations)
+        public IActionResult CreateLocation(Location locations)
         {
             int? userId = HttpContext.Session.GetInt32("UserId");
             if (userId == null) return Redirect("/Home/Login");
 
-            locations.Driver = (int)userId;
+            locations.UserId = (int)userId;
             locations.Name = _protector.Protect(locations.Name);
             locations.Street = _protector.Protect(locations.Street);
 
