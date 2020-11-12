@@ -50,12 +50,12 @@ namespace MrDriverCore.Controllers
                 .Include(u => u.Locations)
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
-            foreach (Locations item in ViewBag.User.Locations)
+            foreach (Locations location in ViewBag.User.Locations)
             {
                 try
                 {
-                    item.Name = _protector.Unprotect(item.Name);
-                    item.Street = _protector.Unprotect(item.Street);
+                    location.Name = _protector.Unprotect(location.Name);
+                    location.Street = _protector.Unprotect(location.Street);
                 }
                 catch (Exception e) { Console.WriteLine(e); };
             }
