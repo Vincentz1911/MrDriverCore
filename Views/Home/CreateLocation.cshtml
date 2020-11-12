@@ -8,7 +8,8 @@
     $(document).ready(function () {
         $("#txtLanguages").autocomplete({
             source: function (request, response) {
-                $.getJSON("/Home/Languages", request, function (data) {
+                $.getJSON("https://api.openrouteservice.org/geocode/autocomplete?api_key=5b3ce3597851110001cf6248acf21fffcf174a02b63b9c6dde867c62&text="+data, request, function (data) {
+                //$.getJSON("/Home/Languages", request, function (data) {
                     response($.map(data, function (item) {
                         return {
                             label: item,
@@ -19,6 +20,23 @@
             }
         });
     });
+
+
+    //var request = new XMLHttpRequest();
+
+    //request.open('GET', 'https://api.openrouteservice.org/geocode/autocomplete?api_key=5b3ce3597851110001cf6248acf21fffcf174a02b63b9c6dde867c62&text=Toky');
+
+    //request.setRequestHeader('Accept', 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8');
+
+    //request.onreadystatechange = function () {
+    //    if (this.readyState === 4) {
+    //        console.log('Status:', this.status);
+    //        console.log('Headers:', this.getAllResponseHeaders());
+    //        console.log('Body:', this.responseText);
+    //    }
+    //};
+
+    //request.send();
 </script>
 
 <h1>Create Location</h1>

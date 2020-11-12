@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MrDriverCore.Data;
 using MrDriverCore.Models;
+using Newtonsoft.Json;
 
 namespace MrDriverCore.Controllers
 {
@@ -32,8 +34,25 @@ namespace MrDriverCore.Controllers
         }
 
 
-        public IActionResult Languages(string term)
+        public async Task<IActionResult> Languages(string term)
         {
+            var baseAddress = new Uri("https://api.openrouteservice.org/geocode/autocomplete?api_key=5b3ce3597851110001cf6248acf21fffcf174a02b63b9c6dde867c62&text="+term);
+
+            using (var httpClient = new HttpClient { BaseAddress = baseAddress })
+            {
+                httpClient.DefaultRequestHeaders.Clear();
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8");
+
+                using (var response = await httpClient.GetAsync("baseAddress"))
+                {
+                    string responseData = await response.Content.ReadAsStringAsync();
+                    var data = JsonConvert.DeserializeObject(responseData);
+                    return Json(responseData);
+                }
+            }
+
+
+
             var result = new[] { @"ActionScript", "AppleScript", "Asp", "BASIC", "C", "C++",
     "Clojure", "COBOL", "ColdFusion", "Erlang","Fortran", "Groovy","Haskell",
     "Java", "JavaScript", "Lisp", "Perl", "PHP", "Python","Ruby", "Scala", "Scheme" };
@@ -126,6 +145,10 @@ namespace MrDriverCore.Controllers
         [HttpPost]
         public IActionResult Login(string username, string password)
         {
+            //DEBUG
+            username = "Henrik";
+            password = "asdf";
+
             if (username == null || password == null)
             {
                 ViewBag.Message = "Please fill out both forms";
