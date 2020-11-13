@@ -7,7 +7,7 @@ namespace MrDriverCore.Data
     public class MyDBContext:DbContext
     {
         public DbSet<User> User { get; set; }
-        public DbSet<Location> Locations { get; set; }       
+        public DbSet<Location> Location { get; set; }       
         public IConfiguration Configuration { get; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

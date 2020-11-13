@@ -12,7 +12,7 @@
         </a>
     <hr />
 
-    <table class="table" style="background: rgba(255,207,104,0.50)">
+    <table class="table" style="background: rgba(255,207,104,0.60)">
         <thead>
             <tr>
                 <th>Name</th>
@@ -22,9 +22,9 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in @ViewBag.User.Locations)
+            @foreach (var item in @ViewBag.User.Location)
             {
-                <tr>
+                <tr style="font-weight:500">
                     <td>@item.Name</td>
                     <td>@item.Street</td>
                     <td>@item.City</td>

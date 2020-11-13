@@ -6,7 +6,7 @@ namespace MrDriverCore.Models
     {
         public User()
         {
-            Locations = new List<Location>();
+            Location = new List<Location>();
         }
 
         public User(int id, string name, string password)
@@ -20,7 +20,7 @@ namespace MrDriverCore.Models
         public string Username { get; set; }
         public string Password { get; set; }
 
-        public List<Location> Locations { get; set; }
+        public List<Location> Location { get; set; }
         public string Name { get; }
     }
 }

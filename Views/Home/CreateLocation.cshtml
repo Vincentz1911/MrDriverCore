@@ -6,20 +6,113 @@
 
 <script>
     $(document).ready(function () {
+
+        var latitude = 0;
+        var longitude = 0;
         $("#txtLanguages").autocomplete({
             source: function (request, response) {
-                $.getJSON("https://api.openrouteservice.org/geocode/autocomplete?api_key=5b3ce3597851110001cf6248acf21fffcf174a02b63b9c6dde867c62&text="+data, request, function (data) {
-                //$.getJSON("/Home/Languages", request, function (data) {
-                    response($.map(data, function (item) {
-                        return {
-                            label: item,
-                            value: item + ""
-                        }
-                    }))
-                })
+
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(showPosition);
+                } else {
+                    x.innerHTML = "Geolocation is not supported by this browser.";
+                }
+
+
+                function showPosition(position) {
+                    latitude = position.coords.latitude;
+                    longitude = position.coords.longitude
+                }
+                
+                var url = "https://api.openrouteservice.org/geocode/autocomplete?api_key=5b3ce3597851110001cf6248acf21fffcf174a02b63b9c6dde867c62"
+                    + "&text=" + txtLanguages.value
+                    + "&focus.point.lon=" + longitude
+                    + "&focus.point.lat=" + latitude
+                    + "&boundary.circle.lon=" + longitude
+                    + "&boundary.circle.lat=" + latitude
+                    + "&boundary.circle.radius=1000";
+                console.log(url);
+                $.getJSON(url, null, function (data) {
+                        console.log(longitude);
+
+                        var features = data.features;
+
+                        var locations = [];
+
+                        features.forEach(feature => {
+                            var location = {
+                                label: feature.properties.label,
+                                properties: feature.properties
+                            }
+                            console.log(location.properties);
+                            locations.push(location);
+                        })
+
+                        // label = feature.properties.label
+
+                        //var properties = features.properties
+                        //console.log(features);
+                        response($.map(locations, function (item) {
+                            //var label = locations.label
+
+                            return {
+                                label: item.label,
+                                value: item.label + ""
+                            }
+                        }))
+                    })
             }
         });
+
+
     });
+
+
+                //var request = new XMLHttpRequest();
+
+                //request.open('GET', 'https://api.openrouteservice.org/geocode/autocomplete?api_key=5b3ce3597851110001cf6248acf21fffcf174a02b63b9c6dde867c62&text=' + txtLanguages.value);
+
+                //request.setRequestHeader('Accept', 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8');
+
+                //request.onreadystatechange = function () {
+                //    if (this.readyState === 4) {
+
+                //        console.log(this.response);
+
+                //        response($.map(this.response, function () {
+                //            console.log(response);
+                //            var array1 = response.properties;
+                //            let array2 = [];
+                //            //array1.forEach(element => {
+
+                //            //    console.log(element.label)
+                //            //    var label = element.label
+                //            //    let newLength = array2.push(element.label);
+                //            //});
+
+                //            return {
+                //                label: array1,
+                //                value: array1 + ""
+                //                //label: array1.properties,
+                //                //value: array1.properties + ""
+                //            }
+                //        }))
+
+
+
+
+                //        //console.log('Status:', this.status);
+                //        //console.log('Headers:', this.getAllResponseHeaders());
+                //        //console.log('Body:', this.responseText);
+
+                //        //return {
+                //        //    label: item.properties,
+                //        //    value: item + ""
+                //        //}
+                //    }
+                //};
+
+                //request.send();
 
 
     //var request = new XMLHttpRequest();
@@ -70,7 +163,7 @@
 
     <div class="ui-widget">
         <label for="tags">Tags: </label>
-        <input type="text" ID="txtLanguages" />
+        <input type="text" ID="txtLanguages" oninput"apiCall()" />
     </div>
 </div>
 

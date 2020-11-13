@@ -75,10 +75,10 @@ namespace MrDriverCore.Controllers
             if (userId == null) return Redirect("/Home/Login");
 
             ViewBag.User = await _context.User
-                .Include(u => u.Locations)
+                .Include(u => u.Location)
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
-            foreach (Location location in ViewBag.User.Locations)
+            foreach (Location location in ViewBag.User.Location)
             {
                 try
                 {
@@ -102,16 +102,16 @@ namespace MrDriverCore.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateLocation(Location locations)
+        public IActionResult CreateLocation(Location location)
         {
             int? userId = HttpContext.Session.GetInt32("UserId");
             if (userId == null) return Redirect("/Home/Login");
 
-            locations.UserId = (int)userId;
-            locations.Name = _protector.Protect(locations.Name);
-            locations.Street = _protector.Protect(locations.Street);
+            location.UserId = (int)userId;
+            location.Name = _protector.Protect(location.Name);
+            location.Street = _protector.Protect(location.Street);
 
-            _context.Locations.Add(locations);
+            _context.Location.Add(location);
             _context.SaveChanges();
 
             ViewBag.Message = "Location created";
